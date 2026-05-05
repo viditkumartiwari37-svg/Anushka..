@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Anushka ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: 'Poppins', sans-serif; transition: background 2s; }
+        
+        /* Sky Elements */
+        .sky { position: fixed; width: 100%; height: 100%; background: radial-gradient(circle at 20% 20%, #1e272e, #000); z-index: -1; }
+        .moon { position: absolute; top: 50px; left: 50px; font-size: 4rem; filter: drop-shadow(0 0 20px gold); animation: float 4s ease-in-out infinite; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.8; animation: twinkle var(--d) infinite; }
+
+        /* Screens */
+        #countdown-screen, #celebration-screen, #message-screen {
+            display: none; height: 100vh; width: 100vw; justify-content: center; align-items: center; flex-direction: column; text-align: center; color: white;
+            position: absolute; top: 0; left: 0;
+        }
+
+        /* --- STYLISH COUNTDOWN --- */
+        #countdown-screen { display: flex; }
+        
+        .timer-box {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.1);
+        }
+
+        #cd-number {
+            font-size: 8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff 0%, #ff9a9e 50%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255, 154, 158, 0.8));
+        }
+
+        .timer-box::before {
+            content: '';
+            position: absolute;
+            width: 105%;
+            height: 105%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: #ff9a9e;
+            border-bottom-color: #fad0c4;
+            animation: spin 2s linear infinite;
+        }
+
+        .ready-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            background: linear-gradient(to right, #ffd700, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px gold);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* --- CELEBRATION & MESSAGE --- */
+        h1 { font-family: 'Dancing Script', cursive; font-size: 5rem; background: linear-gradient(to right, #ff9a9e, #fad0c4, #ffd1ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+        
+        #text { 
+            font-size: 1.25rem; 
+            line-height: 1.6; 
+            max-width: 600px; 
+            padding: 20px; 
+            white-space: pre-wrap; 
+            z-index: 10;
+        }
+
+        .balloon { position: absolute; bottom: -100px; font-size: 3rem; animation: floatUp var(--speed) linear infinite; }
+        .cursor { display: inline-block; width: 3px; height: 25px; background: #ff9a9e; animation: blink 0.7s infinite; }
+
+        /* Animations */
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 50% { transform: scale(1.05); opacity: 0.8; } }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes numberPop { 0% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .fade-in { animation: fadeIn 2s forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 600px) {
+            .timer-box { width: 180px; height: 180px; }
+            #cd-number { font-size: 4rem; }
+            .ready-text { font-size: 2.5rem; }
+            h1 { font-size: 3rem; }
+            #text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sky" id="sky"><div class="moon">🌙</div></div>
+
+    <div id="countdown-screen">
+        <div class="timer-box" id="t-box">
+            <span id="cd-number">3</span>
+        </div>
+    </div>
+
+    <div id="celebration-screen">
+        <div style="font-size: 5rem;">🎂</div>
+        <h1>It's for you Anushka....</h1>
+        <p class="fade-in" style="font-size: 1.5rem;">✨🎈💖🎁🌸✨</p>
+    </div>
+
+    <div id="message-screen">
+        <h2 style="font-family: 'Dancing Script'; font-size: 3rem; color: #ff9a9e; margin-bottom: 0;">Dearest Anushka,</h2>
+        <div id="text"></div><span class="cursor" id="cursor"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // Stars generation
+        const sky = document.getElementById('sky');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = star.style.height = Math.random() * 3 + 'px';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.setProperty('--d', Math.random() * 3 + 2 + 's');
+            sky.appendChild(star);
+        }
+
+        let count = 3;
+        const cdNumber = document.getElementById('cd-number');
+        const tBox = document.getElementById('t-box');
+
+        const timer = setInterval(() => {
+            count--;
+            
+            // Animation reset
+            cdNumber.style.animation = 'none';
+            void cdNumber.offsetWidth; 
+            cdNumber.style.animation = 'numberPop 0.5s ease';
+
+            if (count > 0) {
+                cdNumber.innerText = count;
+            } else if (count === 0) {
+                cdNumber.innerText = "READY?";
+                cdNumber.className = "ready-text";
+                tBox.style.border = 'none';
+                tBox.style.background = 'transparent';
+                tBox.style.boxShadow = 'none';
+            } else {
+                clearInterval(timer);
+                startCelebration();
+            }
+        }, 1000);
+
+        function startCelebration() {
+            document.getElementById('countdown-screen').style.display = 'none';
+            document.getElementById('celebration-screen').style.display = 'flex';
+            
+            const end = Date.now() + 4000;
+            (function frame() {
+                confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff9a9e', '#fff'] });
+                confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff9a9e', '#fff'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            spawnBalloons();
+            setTimeout(showFinalMessage, 6000);
+        }
+
+        function spawnBalloons() {
+            const icons = ['🎈', '💖', '⭐', '🌸'];
+            const interval = setInterval(() => {
+                const item = document.createElement('div');
+                item.className = 'balloon';
+                item.innerText = icons[Math.floor(Math.random() * icons.length)];
+                item.style.left = Math.random() * 90 + 'vw';
+                item.style.setProperty('--speed', Math.random() * 5 + 5 + 's');
+                document.body.appendChild(item);
+                setTimeout(() => item.remove(), 8000);
+            }, 400);
+            setTimeout(() => clearInterval(interval), 6000);
+        }
+
+        function showFinalMessage() {
+            document.getElementById('celebration-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('celebration-screen').style.display = 'none';
+                document.getElementById('message-screen').style.display = 'flex';
+                document.body.style.background = 'radial-gradient(circle, #2c3e50, #000)';
+                typeWriter();
+            }, 1000);
+        }
+
+        // Fixed the quotes issue here using backticks (`)
+        const romanticMessage = `I'm not sure about this... but I'm going to say it anyway. I don't know why you said that about your smile, that was wrong... in my eyes you have the most beautiful smile. The way you carry yourself is the most peaceful thing I've seen in my life. Pta nhi sach lage ya juth aapko but the way you explain your POV... I've never seen this before. You're beautiful, gorgeous, and yeah... itna hi bolunga jyada bolunga to pagal smjhogi ✨💖`;
+
+        let j = 0;
+        function typeWriter() {
+            if (j < romanticMessage.length) {
+                document.getElementById("text").innerHTML += romanticMessage.charAt(j);
+                j++;
+                setTimeout(typeWriter, 65);
+            } else {
+                document.getElementById('cursor').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
